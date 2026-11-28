@@ -7,6 +7,7 @@ const projects = [
 const el = id => document.getElementById(id);
 const gallery = el('gallery');
 const selector = el('selector');
+const covers = gallery.querySelectorAll('[data-cover]');
 const strip = el('slides');
 const reader = el('reader');
 const about = el('about');
@@ -21,7 +22,10 @@ function selectProject(project) {
   if (project === current) return;
   current = project;
   gallery.dataset.project = project.id;
-  el('wall-art').src = imagePath(project,'backdrop.webp');
+  for (const cover of covers) {
+    cover.hidden = cover.dataset.cover !== project.id;
+    if (!cover.hidden) cover.fetchPriority = 'high';
+  }
   el('title').textContent = project.title;
   el('medium').textContent = project.medium;
   el('full').href = pdfPath(project);
